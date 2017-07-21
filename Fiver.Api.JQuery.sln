@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiver.Api.JQuery", "Fiver.Api.JQuery\Fiver.Api.JQuery.csproj", "{38CE672C-55A3-491D-9C63-A632834DCA5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiver.Api.JQuery", "Fiver.Api.JQuery\Fiver.Api.JQuery.csproj", "{38CE672C-55A3-491D-9C63-A632834DCA5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiver.Api.JQuery.Client", "Fiver.Api.JQuery.Client\Fiver.Api.JQuery.Client.csproj", "{D191ECEC-6C24-40E3-B2C0-4DE0DD27807A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{38CE672C-55A3-491D-9C63-A632834DCA5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38CE672C-55A3-491D-9C63-A632834DCA5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38CE672C-55A3-491D-9C63-A632834DCA5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D191ECEC-6C24-40E3-B2C0-4DE0DD27807A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D191ECEC-6C24-40E3-B2C0-4DE0DD27807A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D191ECEC-6C24-40E3-B2C0-4DE0DD27807A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D191ECEC-6C24-40E3-B2C0-4DE0DD27807A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

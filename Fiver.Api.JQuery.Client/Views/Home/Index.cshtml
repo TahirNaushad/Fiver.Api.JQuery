@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ASP.NET Core API with jQuery</title>
+
+    <script src="~/js/jquery.min.js"></script>
+
+</head>
+<body>
+    <div>
+        <input type="button" id="btnGetMovies" value="Get Movies" />
+        
+        <div id="divStatus"></div>
+        <div id="divData"></div>
+
+        <div>
+            <table id="tblMovies">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Year</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="frmMovie">
+            <form>
+                <input type="hidden" id="tbId" />
+                <input type="text"id="tbTitle" />
+                <input type="number" id="tbYear" />
+                <input type="text" id="tbSummary" />
+
+                <input type="button" value="Save" id="btnSaveMovie" />
+            </form>
+        </div>
+
+        <hr />
+        <section>
+            <header>Add Movie</header>
+            <div id="frmAddMovie">
+                <input type="button" id="btnClear" value="Clear" />
+                <form>
+                    <input type="text" id="tbAddTitle" />
+                    <input type="number" id="tbAddYear" />
+                    <input type="text" id="tbAddSummary" />
+
+                    <input type="button" value="Save" id="btnAddMovie" />
+                </form>
+            </div>
+        </section>
+
+        <script>
+            $(function () {
+                onInit();
+
+                $("#btnGetMovies").click(function () {
+                    onGeList();
+                });
+
+                $("#btnSaveMovie").click(function () {
+                    var id = $("#tbId").val();
+                    var movie = editFormToMovie();
+                    apiPut(id, movie);
+                });
+                
+                $("#btnClear").click(function () {
+                    clearAddForm();
+                });
+
+                $("#btnAddMovie").click(function () {
+                    var movie = addFormToMovie();
+                    apiPost(movie);
+                });
+            });
+
+            // Events
+            function onInit() {
+                $("#tblMovies").hide();
+                $("#frmMovie").hide();
+            }
+
+            function onGeList() {
+                $("#tblMovies").show();
+                $("#frmMovie").hide();
+                apiGetList();
+            }
+
+            function onEdit(button) {
+                $("#frmMovie").show();
+                var id = $(button).data("id");
+                apiGetItem(id);
+            };
+
+            function onDelete(button) {
+                $("#frmMovie").hide();
+                var id = $(button).data("id");
+                apiDelete(id);
+            };
+            
+            // API Calls
+            function apiGetList() {
+                $.ajax({
+                    method: 'GET',
+                    url: getUrl(),
+                    dataType: 'json'
+                }).done(function (data, status, xhdr) {
+                    populateTable(data);
+                }).fail(function (xhdr, status, error) {
+                    displayError(status, error);
+                });
+            }
+
+            function apiGetItem(id) {
+                $.ajax({
+                    method: 'GET',
+                    url: getUrl() + id,
+                    dataType: 'json'
+                }).done(function (data, status, xhdr) {
+                    populateForm(data);
+                }).fail(function (xhdr, status, error) {
+                    displayError(status, error);
+                });
+            }
+
+            function apiPost(movie) {
+                $.ajax({
+                    method: 'POST',
+                    url: getUrl(),
+                    contentType: 'application/json',
+                    data: JSON.stringify(movie)
+                }).done(function (data, status, xhdr) {
+                    onGeList();
+                }).fail(function (xhdr, status, error) {
+                    displayError(status, error);
+                });
+            }
+
+            function apiPut(id, movie) {
+                $.ajax({
+                    method: 'PUT',
+                    url: getUrl() + id,
+                    contentType: 'application/json',
+                    data: JSON.stringify(movie)
+                }).done(function (data, status, xhdr) {
+                    onGeList();
+                }).fail(function (xhdr, status, error) {
+                    displayError(status, error);
+                });
+            }
+
+            function apiDelete(id) {
+                $.ajax({
+                    method: 'DELETE',
+                    url: getUrl() + id,
+                }).done(function (data, status, xhdr) {
+                    onGeList();
+                }).fail(function (xhdr, status, error) {
+                    displayError(status, error);
+                });
+            }
+            
+            function getUrl() {
+                return 'http://localhost:1582/movies/';
+            }
+
+            // UI Helpers
+            function displayData(data) {
+                $("#divData").text(JSON.stringify(data));
+            }
+
+            function displayError(status, error) {
+                $("#divStatus").text(status + ": " + error);
+            }
+
+            function populateTable(data) {
+                $("#tblMovies tbody").empty();
+
+                $.each(data, function (i, item) {
+                    var row =
+                        "<tr>" +
+                        "<td>" + item.title + "</td>" +
+                        "<td>" + item.releaseYear + "</td>" +
+
+                        "<td>" +
+                        "<button type='button' " +
+                        "onclick='onEdit(this);' " +
+                        "data-id='" + item.id + "'>" +
+                        "Edit</button>" +
+                        "</td >" +
+
+                        "<td>" +
+                        "<button type='button' " +
+                        "onclick='onDelete(this);' " +
+                        "data-id='" + item.id + "'>" +
+                        "Delete</button>" +
+                        "</td >" +
+
+                        "<td>" + "" + "</td>" +
+                        "</tr>";
+
+                    $("#tblMovies tbody").append(row);
+                });
+            }
+
+            function populateForm(data) {
+                $("#tbId").val(data.id);
+                $("#tbTitle").val(data.title);
+                $("#tbYear").val(data.releaseYear);
+                $("#tbSummary").val(data.summary);
+            }
+
+            function clearAddForm() {
+                $("#tbAddId").val("");
+                $("#tbAddTitle").val("");
+                $("#tbAddYear").val("");
+                $("#tbAddSummary").val("");
+            }
+
+            function editFormToMovie() {
+                return {
+                    id: $("#tbId").val(),
+                    title: $("#tbTitle").val(),
+                    releaseYear: $("#tbYear").val(),
+                    summary: $("#tbSummary").val()
+                };
+            }
+
+            function addFormToMovie() {
+                return {
+                    id: 0,
+                    title: $("#tbAddTitle").val(),
+                    releaseYear: $("#tbAddYear").val(),
+                    summary: $("#tbAddSummary").val()
+                };
+            }
+
+        </script>
+    </div>
+</body>
+</html>

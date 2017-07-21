@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Fiver.Api.JQuery
+namespace Fiver.Api.JQuery.Client
 {
     public class Program
     {
